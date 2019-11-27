@@ -6,3 +6,12 @@ fos_auth_server_token:
 
 fos_oauth_server_authorize:
   resource: "@FOSOAuthServerBundle/Resources/config/routing/authorize.xml"
+
+#config/routes.yaml
+api_auth_login:
+  path: /api/auth/login
+  methods:  [POST]
+
+api:
+  prefix: /api
+  resource: '../src/Controller/Api'

@@ -11,7 +11,6 @@ use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use App\Entity\Car;
-use Symfony\Component\Validator\Constraints\DateTime;
 
 class CarController extends FOSRestController
 {
@@ -50,7 +49,7 @@ class CarController extends FOSRestController
             return new JsonResponse(['code' => '', 'erreur' => 'Model'], 400);
         }
 
-        $yearDate = new DateTime($data['Year']);
+        $yearDate = new \DateTime($data['Year']);
         $car = new Car();
         $car->setYear($yearDate);
         $car->setBrand($data['Brand']);

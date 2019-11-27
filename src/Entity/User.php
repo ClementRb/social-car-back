@@ -26,6 +26,11 @@ class User extends BaseUser
      */
     private $Cars;
 
+    /**
+     * @ORM\Column(type="string", unique=true, nullable=true)
+     */
+    private $apiToken;
+
     public function __construct()
     {
         parent::__construct();
@@ -62,5 +67,21 @@ class User extends BaseUser
         }
 
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getApiToken()
+    {
+        return $this->apiToken;
+    }
+
+    /**
+     * @param mixed $apiToken
+     */
+    public function setApiToken($apiToken): void
+    {
+        $this->apiToken = $apiToken;
     }
 }
