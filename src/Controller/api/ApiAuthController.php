@@ -8,6 +8,7 @@
 
 namespace App\Controller\api;
 
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use FOS\UserBundle\Model\UserManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -17,6 +18,7 @@ use App\Entity\User;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Constraints as Assert;
+
 /**
  * @Route("/auth")
  */
@@ -53,8 +55,7 @@ class ApiAuthController extends AbstractController
             ->setEmail($email)
             ->setEnabled(true)
             ->setRoles(['ROLE_USER'])
-            ->setSuperAdmin(false)
-        ;
+            ->setSuperAdmin(false);
         try {
             $userManager->updateUser($user);
         } catch (\Exception $e) {

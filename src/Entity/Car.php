@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CarRepository")
  */
-class Car
+class Car implements \JsonSerializable
 {
     /**
      * @ORM\Id()
@@ -17,29 +17,45 @@ class Car
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="Cars")
+     * @ORM\ManyToOne(targetEntity="App\Entity\CarsBrand", inversedBy="cars")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $brand;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\CarModels", inversedBy="cars")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $Model;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\CarSubmodels", inversedBy="cars")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $SubModel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="cars")
      * @ORM\JoinColumn(nullable=false)
      */
     private $User;
 
-    /**
-     * @ORM\Column(type="date")
-     */
-    private $Year;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $Brand;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $Model;
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getSubModel(): ?CarSubmodels
+    {
+        return $this->SubModel;
+    }
+
+    public function setSubModel(?CarSubmodels $SubModel): self
+    {
+        $this->SubModel = $SubModel;
+
+        return $this;
     }
 
     public function getUser(): ?User
@@ -54,39 +70,39 @@ class Car
         return $this;
     }
 
-    public function getYear(): ?\DateTimeInterface
+
+    public function getBrand(): ?CarsBrand
     {
-        return $this->Year;
+        return $this->brand;
     }
 
-    public function setYear(\DateTimeInterface $Year): self
+    public function setBrand(?CarsBrand $brand): self
     {
-        $this->Year = $Year;
+        $this->brand = $brand;
 
         return $this;
     }
 
-    public function getBrand(): ?string
-    {
-        return $this->Brand;
-    }
-
-    public function setBrand(string $Brand): self
-    {
-        $this->Brand = $Brand;
-
-        return $this;
-    }
-
-    public function getModel(): ?string
+    public function getModel(): ?CarModels
     {
         return $this->Model;
     }
 
-    public function setModel(string $Model): self
+    public function setModel(?CarModels $Model): self
     {
         $this->Model = $Model;
 
         return $this;
     }
+
+    public function jsonSerialize()
+    {
+        return [
+            'brand' => $this->getBrand(),
+            'model' => $this->getModel(),
+            'subModel' => $this->getSubModel(),
+            'user' => $this->getUser(),
+            ];
+    }
+
 }

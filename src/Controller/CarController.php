@@ -2,26 +2,52 @@
 
 namespace App\Controller;
 
+use App\Entity\Car;
 use App\Entity\User;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use FOS\UserBundle\Model\UserManagerInterface;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use App\Entity\Car;
 
+/**
+ * @Route("/api", name="api_")
+ */
 class CarController extends FOSRestController
 {
+    /**
+     * @Route("/user", name="api_user",  methods={"GET"})
+     * @param Request $request
+     * @param UserManagerInterface $userManager
+     * @return JsonResponse|\Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function getUserInfo(Request $request, UserManagerInterface $userManager)
+    {
+        $data = $request->request->all();
+        $username = $data;
+        $users = $this->getUser();
+
+        $email = 'clement@gmail.com';
+        try {
+            $user =  $this->getDoctrine()->getRepository(User::class)
+                ->findOneBy(['email' => $email]);
+        } catch (\Exception $e) {
+            return new JsonResponse(["error" => $e->getMessage()], 500);
+        }
+        return new JsonResponse(['user' => $users], 200);
+    }
+
     /**
      * List all cars
      * @Route("/cars", methods={"GET"})
      */
     public function getCarActions()
     {
-        $repository = $this->getDoctrine()->getRepository(User::class);
-        $cars = $repository->findAll();
+        $cars = $this->getDoctrine()->getRepository(Car::class)->findAll();
+
         return new JsonResponse($cars, 200);
     }
 
@@ -63,4 +89,6 @@ class CarController extends FOSRestController
         return new JsonResponse('ok', 200);
 
     }
+
+
 }

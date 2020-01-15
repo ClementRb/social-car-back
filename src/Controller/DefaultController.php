@@ -5,7 +5,7 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
-class DefautController extends AbstractController
+class DefaultController extends AbstractController
 {
     /**
      * @Route("/defaut", name="defaut")
@@ -13,7 +13,7 @@ class DefautController extends AbstractController
     public function index()
     {
         return $this->render('defaut/index.html.twig', [
-            'controller_name' => 'DefautController',
+            'controller_name' => 'DefaultController',
         ]);
     }
 }
