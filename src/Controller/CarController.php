@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Car;
+use App\Entity\Garage;
 use App\Entity\User;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\View\View;
@@ -27,26 +28,21 @@ class CarController extends FOSRestController
     public function getUserInfo(Request $request, UserManagerInterface $userManager)
     {
         $data = $request->request->all();
-        $username = $data;
         $users = $this->getUser();
 
-        $email = 'clement@gmail.com';
-        try {
-            $user =  $this->getDoctrine()->getRepository(User::class)
-                ->findOneBy(['email' => $email]);
-        } catch (\Exception $e) {
-            return new JsonResponse(["error" => $e->getMessage()], 500);
-        }
         return new JsonResponse(['user' => $users], 200);
     }
 
     /**
      * List all cars
      * @Route("/cars", methods={"GET"})
+     * @param Request $request
+     * @return JsonResponse|\Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function getCarActions()
+    public function getCarActions(Request $request)
     {
-        $cars = $this->getDoctrine()->getRepository(Car::class)->findAll();
+        $data = $request->request->all();
+        $cars = $this->getDoctrine()->getRepository(Car::class)->findBy();
 
         return new JsonResponse($cars, 200);
     }
@@ -80,7 +76,7 @@ class CarController extends FOSRestController
         $car->setYear($yearDate);
         $car->setBrand($data['Brand']);
         $car->setModel($data['Model']);
-        //$car->setUser($data['User']);
+        $car->setUser($data['User']);
 
 
         $this->getDoctrine()->getManager()->persist($car);

@@ -32,10 +32,16 @@ class User extends BaseUser implements \JsonSerializable
      */
     private $cars;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Garage", mappedBy="user", orphanRemoval=true)
+     */
+    private $garages;
+
     public function __construct()
     {
         parent::__construct();
         $this->cars = new ArrayCollection();
+        $this->garages = new ArrayCollection();
     }
 
 
@@ -89,7 +95,40 @@ class User extends BaseUser implements \JsonSerializable
     public function jsonSerialize()
     {
         return [
-          'id' => $this->getId()
+          'id' => $this->getId(),
+            'username' => $this->getUsername(),
+            'email' => $this->getEmail(),
         ];
+    }
+
+    /**
+     * @return Collection|Garage[]
+     */
+    public function getGarages(): Collection
+    {
+        return $this->garages;
+    }
+
+    public function addGarage(Garage $garage): self
+    {
+        if (!$this->garages->contains($garage)) {
+            $this->garages[] = $garage;
+            $garage->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGarage(Garage $garage): self
+    {
+        if ($this->garages->contains($garage)) {
+            $this->garages->removeElement($garage);
+            // set the owning side to null (unless already changed)
+            if ($garage->getUser() === $this) {
+                $garage->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }

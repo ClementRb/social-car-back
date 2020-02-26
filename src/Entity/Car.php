@@ -40,6 +40,12 @@ class Car implements \JsonSerializable
      */
     private $User;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Garage", inversedBy="cars")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $Garage;
+
 
     public function getId(): ?int
     {
@@ -98,11 +104,23 @@ class Car implements \JsonSerializable
     public function jsonSerialize()
     {
         return [
+            'id' => $this->getId(),
             'brand' => $this->getBrand(),
             'model' => $this->getModel(),
-            'subModel' => $this->getSubModel(),
-            'user' => $this->getUser(),
+            'subModel' => $this->getSubModel()
             ];
+    }
+
+    public function getGarage(): ?Garage
+    {
+        return $this->Garage;
+    }
+
+    public function setGarage(?Garage $Garage): self
+    {
+        $this->Garage = $Garage;
+
+        return $this;
     }
 
 }
