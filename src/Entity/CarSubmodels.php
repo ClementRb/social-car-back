@@ -102,6 +102,7 @@ class CarSubmodels implements \JsonSerializable
     public function jsonSerialize()
     {
         return [
+            'id' => $this->getId(),
             'name' => $this ->getName()
         ];
     }

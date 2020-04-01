@@ -43,7 +43,7 @@ class GarageController extends FOSRestController
         $this->getDoctrine()->getManager()->persist($garage);
         $this->getDoctrine()->getManager()->flush();
 
-        return new JsonResponse('ok', 200);
+        return new JsonResponse('Garage was create', 200);
 
     }
 
@@ -63,6 +63,21 @@ class GarageController extends FOSRestController
     }
 
     /**
+     * Get all cars from a garage
+     * @Rest\Route("/garage/{id}/cars", methods={"GET"})
+     * @param int $id
+     * @return JsonResponse|\Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function getCarsOfGarage(Request $request, $id)
+    {
+
+        $garage = $this->getDoctrine()->getRepository(Garage::class)->find($id);
+
+        dump($garage ->getCars()->toArray());
+        return new JsonResponse($garage, 200);
+    }
+
+    /**
      *Add a car
      * @Rest\Route("/garage/car/{id}", methods={"POST"})
      * @param int $id
@@ -79,15 +94,13 @@ class GarageController extends FOSRestController
         $car = $this->getDoctrine()->getRepository(Car::class)->findBy(['id' => $id]);
 
         $car = array_pop($car);
-        dump($car);
-        dump($garage[0]);
 
         $car->setGarage($garage[0]);
 
         $this->getDoctrine()->getManager()->persist($car);
         $this->getDoctrine()->getManager()->flush();
 
-        return new JsonResponse('ok', 200);
+        return new JsonResponse('Car was added', 200);
 
     }
 }

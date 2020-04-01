@@ -30,7 +30,7 @@ class Garage implements \JsonSerializable
     private $user;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Car", mappedBy="Garage", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Car", mappedBy="Garage")
      */
     private $cars;
 
@@ -104,6 +104,7 @@ class Garage implements \JsonSerializable
         return [
             'id' => $this->getId(),
             'name' => $this->getName(),
+            'cars' => $this->getCars()->toArray(),
         ];
     }
 }
